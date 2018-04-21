@@ -13,7 +13,8 @@ app.set("view engine", "ejs");
 //schema setup
 var campgroundSchema = new mongoose.Schema({
 	name: String,
-	image: String
+	image: String,
+	description: String
 });
 
 var Campground = mongoose.model("Campground", campgroundSchema);
@@ -24,24 +25,25 @@ app.get("/", function(req, res){
 	res.render("landing");
 });
 
-//campgrounds page
+//INDEX: campgrounds page
 app.get("/campgrounds", function(req, res){
 	//get all campgrounds from db
 	Campground.find({}, function(err, allCampgrounds){
 		if(err){
 			console.log(err);
 		} else {
-			res.render("campgrounds", {campgrounds: allCampgrounds});
+			res.render("index", {campgrounds: allCampgrounds});
 		}
 	});
 });
 
-//add campgrounds
+//CREATE: add campgrounds
 app.post("/campgrounds", function(req, res){
 	//get data from form and add
 	var name = req.body.name;
 	var image = req.body.image;
-	var newCampground = {name: name, image: image};
+	var desc = req.body.description;
+	var newCampground = {name: name, image: image, description: desc};
 	//create new campground and save to db
 	Campground.create(newCampground, function(err, newlyCreated){
 		if(err){
@@ -52,8 +54,22 @@ app.post("/campgrounds", function(req, res){
 	});	
 });
 
+//NEW: show form to create campground
 app.get("/campgrounds/new", function(req, res){
 	res.render("new.ejs");
+});
+
+//SHOW: show info on campground
+app.get("/campgrounds/:id", function(req, res){
+	//find campground with ID
+	Campground.findById(req.params.id, function(err, foundCampground){
+		if(err){
+			console.log(err);
+		} else {
+			//render show template with info
+			res.render("show", {campground: foundCampground});
+		}
+	});
 });
 
 //start the yelpcamp server
