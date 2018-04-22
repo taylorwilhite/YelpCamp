@@ -25,7 +25,7 @@ app.get("/campgrounds", function(req, res){
 		if(err){
 			console.log(err);
 		} else {
-			res.render("index", {campgrounds: allCampgrounds});
+			res.render("campgrounds/index", {campgrounds: allCampgrounds});
 		}
 	});
 });
@@ -49,7 +49,7 @@ app.post("/campgrounds", function(req, res){
 
 //NEW: show form to create campground
 app.get("/campgrounds/new", function(req, res){
-	res.render("new.ejs");
+	res.render("campgrounds/new");
 });
 
 //SHOW: show info on campground
@@ -60,9 +60,18 @@ app.get("/campgrounds/:id", function(req, res){
 			console.log(err);
 		} else {
 			//render show template with info
-			res.render("show", {campground: foundCampground});
+			res.render("campgronds/show", {campground: foundCampground});
 		}
 	});
+});
+
+// ====================
+// COMMENTS ROUTES
+// ====================
+
+//NEW
+app.get("/campgrounds/:id/comments/new", function(req, res){
+	res.render("comments/new");
 });
 
 //start the yelpcamp server
