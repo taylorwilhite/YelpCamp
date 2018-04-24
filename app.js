@@ -30,6 +30,11 @@ passport.use(new LocalStrategy(User.authenticate()));
 passport.serializeUser(User.serializeUser());
 passport.deserializeUser(User.deserializeUser());
 
+app.use(function(req, res, next){
+	res.locals.currentUser = req.user;
+	next();
+});
+
 //homepage
 app.get("/", function(req, res){
 	res.render("landing");
@@ -99,7 +104,7 @@ app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req, res){
 });
 
 //CREATE
-app.post("/campgrounds/:id/comments", function(req, res ){
+app.post("/campgrounds/:id/comments", isLoggedIn, function(req, res ){
 	//lookup campground using ID
 	Campground.findById(req.params.id, function(err, campground){
 		if(err){
@@ -136,7 +141,7 @@ app.post("/register", function(req, res){
 			console.log(err);
 			return res.render("register")
 		}
-		passport.authenticate("local")(recampgrondsq, res, function(){
+		passport.authenticate("local")(req, res, function(){
 			res.redirect("/campgrounds");
 		});
 	});
