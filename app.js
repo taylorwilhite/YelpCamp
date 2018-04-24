@@ -87,7 +87,7 @@ app.get("/campgrounds/:id", function(req, res){
 // ====================
 
 //NEW
-app.get("/campgrounds/:id/comments/new", function(req, res){
+app.get("/campgrounds/:id/comments/new", isLoggedIn, function(req, res){
 	//find campground by ID
 	Campground.findById(req.params.id, function(err, campground){
 		if(err){
@@ -160,6 +160,13 @@ app.get("/logout", function(req, res){
 	req.logout();
 	res.redirect("/campgrounds");
 });
+
+function isLoggedIn(req, res, next){
+	if(req.isAuthenticated()){
+		return next();
+	}
+	res.redirect("/login");
+};
 
 //start the yelpcamp server
 app.listen(3000, process.env.IP, function(){
