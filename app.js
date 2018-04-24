@@ -136,15 +136,23 @@ app.post("/register", function(req, res){
 			console.log(err);
 			return res.render("register")
 		}
-		passport.authenticate("local")(req, res, function(){
+		passport.authenticate("local")(recampgrondsq, res, function(){
 			res.redirect("/campgrounds");
 		});
 	});
 });
 
 //show login form
-app.get("/login" function(req, res){
+app.get("/login", function(req, res){
 	res.render("login");
+});
+
+//Handle login logic
+app.post("/login", passport.authenticate("local", 
+	{
+		successRedirect: "/campgrounds", 
+		failureRedirect: "/login"
+	}), function(req, res){
 });
 
 //start the yelpcamp server
