@@ -22,7 +22,7 @@ router.post("/", isLoggedIn, function(req, res){
 	var desc = req.body.description;
 	var author = {
 		id: req.user._id,
-		username = req.user.username
+		username: req.user.username
 	};
 	var newCampground = {name: name, image: image, description: desc, author: author};
 	//create new campground and save to db
@@ -53,6 +53,34 @@ router.get("/:id", function(req, res){
 	});
 });
 
+//EDIT Campground
+router.get("/:id/edit", function (req, res){
+	Campground.findById(req.params.id, function(err, foundCampground){
+		if(err){
+			res.redirect("/campgrounds")
+		} else {
+			res.render("campgrounds/edit", {campground: foundCampground});
+		}
+	});
+});
+//UPDATE campground
+router.put("/:id", function(req, res){
+	//find and update campground
+	Campground.findByIdAndUpdate(req.params.id, req.body.campground, function(err, updatedCampground){
+		if(err){
+			res.redirect("/campgrounds");
+		} else {
+			//redirect to show page
+			res.redirect("/campgrounds/" + req.params.id);
+		}
+	});
+});
+
+//DESTROY route
+
+
+
+//Middleware
 function isLoggedIn(req, res, next){
 	if(req.isAuthenticated()){
 		return next();
