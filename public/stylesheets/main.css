@@ -5,3 +5,11 @@
 .thumbnail img {
 	width: 100%;
 }
+
+#delete-form {
+	display: inline;
+}
+
+#campgrounds-back {
+	margin-bottom: 10px;
+}
